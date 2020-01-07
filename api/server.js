@@ -9,7 +9,10 @@ const server = express();
 
 server.use(helmet());
 server.use(express.json());
-server.use(cors());
+server.use(cors({
+    credentials: true,
+    origin: "https://elated-volhard-e1c365.netlify.com/"
+}));
 
 server.use('/api/auth', authRouter);
 server.use('/api/users', usersRouter);
