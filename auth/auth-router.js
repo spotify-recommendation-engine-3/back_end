@@ -26,26 +26,29 @@ router.post('/register', validateUser, (req, res) => {
 
 router.post('/login', validateUser, (req, res) => {
     let { username, password } = req.body;
-
+    
     Users.findBy({ username })
     .first()
     .then(user => {
         if (user && bcrypt.compareSync(password, user.password)) {
 
-        const token = signedToken(user)
+        const token = signedToken(user);
         
-        res.status(200)
+        res.status(200)            
             .json({
             token,
-            message: `Welcome ${user.username}!`,
-            });
+            user_id: user.id,            
+            message: `Welcome ${user.username}!`
+            });            
         } else {
         res.status(401)
             .json({ message: 'Invalid Credentials' });
             }
     })
     .catch(error => {
-        res.status(500).json(error);
+        console.log(error)
+        res.status(500)
+        .json(error);
     });
 });
 
