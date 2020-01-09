@@ -13,12 +13,12 @@ return db('users')
 }
 
 function findBy(filter) {
-return db('users').where(filter);
+    return db('users')
+        .where(filter);
 }
 
 function add(user) {
-
-return db('users')
+    return db('users')
         .insert(user, 'id')
         .then(([id]) => {
             return findById(id);
@@ -26,7 +26,7 @@ return db('users')
 }
 
 function findById(id) {
-return db('users')
-    .where({ id })
-    .first();
+    return db('users')
+        .where({ id })
+        .first();
 }
