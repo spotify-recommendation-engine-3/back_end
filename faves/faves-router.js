@@ -1,17 +1,9 @@
 const router = require('express').Router();
 
 const Faves = require('./faves-model.js');
+const restricted = require('../auth/restricted-middleware.js');
 
-// router.get('/', restricted, (req, res) => {
-//     Faves.find()
-//         .then(users => {
-//         res.json(users);
-//     })
-//     .catch(err => res.send(err));
-// });
-
-
-router.post('/',(req, res) => {
+router.post('/', restricted, (req, res) => {
     let faveSong = req.body;
 
     Faves
@@ -29,7 +21,7 @@ router.post('/',(req, res) => {
     });
 });
 
-router.get('/:id',(req,res)=>{
+router.get('/:id', restricted, (req,res)=>{
     const {id} = req.params;
 
     Faves
@@ -44,4 +36,24 @@ router.get('/:id',(req,res)=>{
     });
 })
 
+router.delete('/:userId/:trackId', restricted, (req,res)=>{
+    const {userId} = req.params;
+    const {trackId} = req.params;
+
+    Faves
+    .deleteFave(userId,trackId)
+    .then(deleted => {
+        if(deleted){
+            res.json({removed: deleted})
+        } else {
+            res.status(404)
+                .json({message: "Could not find track with that id"})
+        }
+    })
+    .catch(err => {
+        console.log(err)
+        res.status(500)
+            .json({message:"Failed to delete track"})
+    })
+})
 module.exports = router;

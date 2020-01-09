@@ -4,7 +4,7 @@ module.exports = {
 addFave,
 findAllMyFave,
 findFaveById,
-// deleteFave
+deleteFave
 };
 
 function addFave(fave){
@@ -27,4 +27,11 @@ function findAllMyFave(id){
         .select('F.track_title', 'F.track_id')
         .join('users as U','U.id','F.user_id')
         .where('user_id', id)
+}
+
+function deleteFave(userId,trackId){
+    return db('favourites as F')
+        .where('F.user_id', userId)
+        .where('F.track_id', trackId)
+        .del()
 }
